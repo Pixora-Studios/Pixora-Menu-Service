@@ -46,7 +46,7 @@ export const CAFE_CONFIG = {
     combos: true,
     specials: true,
     vegNonVegFilter: true,
-    searchBar: false,
+    searchBar: true,
     vegToggle: true,
     filterTags: ["All", "Bestseller", "New", "Spicy", "Must Try", "Value"]
   },
