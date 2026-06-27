@@ -27,7 +27,7 @@ export default function FloatingCategoryButton({ categories, onSelect }: Props) 
         {isOpen && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
+              className="fixed inset-0 bg-black/80 z-40 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -35,26 +35,36 @@ export default function FloatingCategoryButton({ categories, onSelect }: Props) 
             />
             <motion.div
               className="fixed bottom-0 left-0 right-0 z-50 bg-cardBg border-t border-border rounded-t-3xl p-6 pb-12 max-h-[80vh] overflow-y-auto no-scrollbar"
+              drag="y"
+              dragConstraints={{ top: 0 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 100) setIsOpen(false);
+              }}
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
             >
-              <div className="w-10 h-1 bg-border rounded-full mx-auto mb-6" />
-              <p className="text-textMuted text-[10px] tracking-[0.3em] font-body uppercase mb-6 text-center">Jump to Category</p>
+              <div className="w-10 h-1 bg-border rounded-full mx-auto mb-8" />
+              <p className="text-accent text-[10px] tracking-[0.5em] font-body uppercase mb-8 text-center">Explore Menu</p>
 
               <div className="grid grid-cols-1 gap-2">
                 {categories.map((cat) => (
                   <button
                     key={cat.id}
-                    className="flex items-center space-x-4 w-full p-4 rounded-2xl hover:bg-white/5 transition-colors text-left"
+                    className="flex items-center justify-between w-full p-5 rounded-2xl hover:bg-white/5 transition-colors text-left group"
                     onClick={() => {
                       onSelect(cat.id);
                       setIsOpen(false);
                     }}
                   >
-                    <span className="text-2xl opacity-70">{cat.icon}</span>
-                    <span className="text-text font-heading text-xl">{cat.label}</span>
+                    <div className="flex items-center gap-5">
+                      <span className="text-2xl opacity-70 group-hover:opacity-100 transition-opacity">{cat.icon}</span>
+                      <span className="text-text font-heading text-2xl group-hover:text-accent transition-colors">{cat.label}</span>
+                    </div>
+                    <span className="text-accent opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+                      →
+                    </span>
                   </button>
                 ))}
               </div>

@@ -1,13 +1,14 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState, useMemo, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { Suspense, useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import menuDataRaw from "@/data/menu.json";
-import CategoryTabs from "@/components/CategoryTabs";
 import MenuGrid from "@/components/MenuGrid";
-import TableBanner from "@/components/TableBanner";
+import FilterBar from "@/components/FilterBar";
 import FloatingCategoryButton from "@/components/FloatingCategoryButton";
+import PageTransition from "@/components/PageTransition";
 import { CAFE_CONFIG } from "@/config/cafe.config";
 import { MenuData, Category } from "@/types/menu";
 
@@ -15,14 +16,26 @@ const menuData = menuDataRaw as unknown as MenuData;
 
 function MenuContent() {
   const searchParams = useSearchParams();
-  const tableNumber = searchParams.get("table");
+  const table = searchParams.get("table");
   const [activeCategory, setActiveCategory] = useState(menuData.categories[0].id);
-  const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [activeVeg, setActiveVeg] = useState('all');
+  const [activeTags, setActiveTags] = useState<string[]>([]);
+  const categoryRefs = useRef<Record<string, HTMLElement | null>>({});
+
+  const toggleTag = (tag: string) => {
+    if (tag === 'All') {
+      setActiveTags([]);
+      return;
+    }
+    setActiveTags(prev =>
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+    );
+  };
 
   const scrollToCategory = (categoryId: string) => {
     const el = categoryRefs.current[categoryId];
     if (el) {
-      const offset = 100; // Offset for sticky header
+      const offset = 160; // Offset for header + filter bar
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = el.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -45,8 +58,8 @@ function MenuContent() {
         });
       },
       {
-        threshold: 0.2,
-        rootMargin: "-100px 0px -40% 0px"
+        threshold: 0.1,
+        rootMargin: "-160px 0px -40% 0px"
       }
     );
 
@@ -55,41 +68,44 @@ function MenuContent() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [activeVeg, activeTags]);
 
   return (
-    <div className="min-h-screen pb-32 pt-10 px-4 md:px-8 max-w-7xl mx-auto">
-      <div className="flex flex-col items-center mb-12">
-        <motion.h1
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-4xl md:text-6xl font-heading text-accent mb-2"
-        >
-          Our Menu
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-textMuted font-body tracking-widest uppercase text-xs"
-        >
-          {CAFE_CONFIG.tagline}
-        </motion.p>
+    <div className="min-h-screen pb-32">
+      {/* Minimal Sticky Header */}
+      <header className="sticky top-0 z-50 h-12 flex items-center justify-between px-6 bg-black/60 backdrop-blur-md border-b border-border/50">
+        <div className="flex items-center gap-3">
+          <div className="w-6 h-6 border border-accent/40 flex items-center justify-center rounded-sm">
+            <span className="text-accent font-heading text-xs">{CAFE_CONFIG.shortName[0]}</span>
+          </div>
+          <span className="text-text font-body text-[11px] tracking-[0.2em] uppercase font-bold">
+            {CAFE_CONFIG.name}
+          </span>
+        </div>
+        {table && (
+          <div className="bg-accent/10 border border-accent/30 px-3 py-1 rounded-full">
+            <span className="text-accent text-[9px] font-bold uppercase tracking-widest">Table {table}</span>
+          </div>
+        )}
+      </header>
+
+      {/* Filter Bar */}
+      <FilterBar
+        activeVeg={activeVeg}
+        setActiveVeg={setActiveVeg}
+        activeTags={activeTags}
+        toggleTag={toggleTag}
+      />
+
+      <div className="px-4">
+        <MenuGrid
+          categories={menuData.categories as Category[]}
+          items={menuData.items}
+          ref={categoryRefs}
+          activeVeg={activeVeg}
+          activeTags={activeTags}
+        />
       </div>
-
-      {tableNumber && <TableBanner table={tableNumber} />}
-
-      <CategoryTabs
-        categories={menuData.categories as Category[]}
-        active={activeCategory}
-        onChange={scrollToCategory}
-      />
-
-      <MenuGrid
-        categories={menuData.categories as Category[]}
-        items={menuData.items}
-        ref={categoryRefs}
-      />
 
       <FloatingCategoryButton
         categories={menuData.categories as Category[]}
@@ -98,15 +114,7 @@ function MenuContent() {
 
       <footer className="mt-24 text-center border-t border-border pt-12">
         <div className="text-accent font-heading text-2xl mb-4">{CAFE_CONFIG.name}</div>
-        <div className="flex justify-center space-x-6 mb-8">
-          {CAFE_CONFIG.social.instagram && (
-            <a href={CAFE_CONFIG.social.instagram} className="text-textMuted hover:text-accent transition-colors">Instagram</a>
-          )}
-          {CAFE_CONFIG.social.maps && (
-            <a href={CAFE_CONFIG.social.maps} className="text-textMuted hover:text-accent transition-colors">Find Us</a>
-          )}
-        </div>
-        <p className="text-textMuted/50 text-[10px] tracking-widest uppercase">Powered by Pixora Studios</p>
+        <p className="text-textMuted/50 text-[9px] tracking-widest uppercase">Powered by Pixora Studios</p>
       </footer>
     </div>
   );
@@ -114,10 +122,16 @@ function MenuContent() {
 
 export default function MenuPage() {
   return (
-    <main className="bg-bg text-text min-h-screen">
-      <Suspense fallback={<div className="h-screen flex items-center justify-center font-heading text-accent text-3xl">Loading Menu...</div>}>
-        <MenuContent />
-      </Suspense>
-    </main>
+    <PageTransition>
+      <main className="bg-bg text-text min-h-screen">
+        {/* Grain & Scanlines */}
+        <div className="grain-overlay opacity-40" />
+        <div className="scanlines opacity-10" />
+
+        <Suspense fallback={<div className="h-screen flex items-center justify-center font-heading text-accent text-3xl">Loading Menu...</div>}>
+          <MenuContent />
+        </Suspense>
+      </main>
+    </PageTransition>
   );
 }

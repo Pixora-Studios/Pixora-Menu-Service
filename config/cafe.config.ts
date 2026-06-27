@@ -26,7 +26,7 @@ export const CAFE_CONFIG = {
 
   // Loading screen
   loader: {
-    text: "Brewing your experience",
+    text: "BREWING YOUR EXPERIENCE",
     duration: 2800,
   },
 
@@ -47,5 +47,7 @@ export const CAFE_CONFIG = {
     specials: true,
     vegNonVegFilter: true,
     searchBar: false,
+    vegToggle: true,
+    filterTags: ["All", "Bestseller", "New", "Spicy", "Must Try", "Value"]
   },
 };

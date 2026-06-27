@@ -6,8 +6,9 @@ import { CAFE_CONFIG } from "@/config/cafe.config";
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const root = document.documentElement;
-    const { theme } = CAFE_CONFIG;
+    const { theme, fonts } = CAFE_CONFIG;
 
+    // Theme Colors
     root.style.setProperty("--bg", theme.bg);
     root.style.setProperty("--bg-secondary", theme.bgSecondary);
     root.style.setProperty("--accent", theme.accent);
@@ -16,6 +17,10 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     root.style.setProperty("--text-muted", theme.textMuted);
     root.style.setProperty("--card-bg", theme.cardBg);
     root.style.setProperty("--border", theme.border);
+
+    // Fonts
+    root.style.setProperty("--font-heading", `"${fonts.heading}", serif`);
+    root.style.setProperty("--font-body", `"${fonts.body}", sans-serif`);
 
     // Set background color of body to prevent flash
     document.body.style.backgroundColor = theme.bg;

@@ -1,34 +1,24 @@
-import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
-import "./globals.css";
-import SmoothScroll from "@/components/SmoothScroll";
+"use client";
+
+import { useEffect } from "react";
 import ThemeProvider from "@/components/ThemeProvider";
-
-const headingFont = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const bodyFont = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-body",
-  weight: ["300", "400", "500", "700"],
-});
-
-export const metadata: Metadata = {
-  title: "Noir Café | Digital Menu",
-  description: "Experience the finest flavors at Noir Café.",
-};
+import SmoothScroll from "@/components/SmoothScroll";
+import PageTransition from "@/components/PageTransition";
+import "@/app/globals.css";
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className={`${headingFont.variable} ${bodyFont.variable} font-body antialiased`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+      </head>
+      <body>
         <ThemeProvider>
           <SmoothScroll>
             {children}
