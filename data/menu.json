@@ -1,0 +1,101 @@
+{
+  "categories": [
+    { "id": "specials", "label": "Chef's Specials", "icon": "✦", "type": "special" },
+    { "id": "combos",   "label": "Combos",          "icon": "◈", "type": "combo"   },
+    { "id": "coffee",   "label": "Coffee",           "icon": "◉", "type": "regular" },
+    { "id": "food",     "label": "Bites",            "icon": "◍", "type": "regular" },
+    { "id": "desserts", "label": "Desserts",         "icon": "◎", "type": "regular" }
+  ],
+  "items": [
+    {
+      "id": "001",
+      "name": "Black Velvet Espresso",
+      "description": "Double shot, cold brew reduction, smoked vanilla",
+      "price": 280,
+      "category": "coffee",
+      "image": "https://images.unsplash.com/photo-1510972527921-ce03766a1cf1?q=80&w=1887&auto=format&fit=crop",
+      "tags": ["bestseller", "veg"],
+      "badge": null,
+      "available": true
+    },
+    {
+      "id": "002",
+      "name": "The Noir Combo",
+      "description": "Any cold brew + Croissant + House cookie",
+      "price": 449,
+      "originalPrice": 560,
+      "category": "combos",
+      "image": "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?q=80&w=2071&auto=format&fit=crop",
+      "tags": ["value", "veg"],
+      "badge": "Save ₹111",
+      "available": true,
+      "comboIncludes": ["Any Cold Brew", "Butter Croissant", "Dark Chocolate Cookie"]
+    },
+    {
+      "id": "003",
+      "name": "Midnight Truffle Toast",
+      "description": "Chef's weekly special. Black truffle, ricotta, sourdough",
+      "price": 390,
+      "category": "specials",
+      "image": "https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=1780&auto=format&fit=crop",
+      "tags": ["limited", "veg"],
+      "badge": "Today Only",
+      "available": true
+    },
+    {
+      "id": "004",
+      "name": "Artisan Cappuccino",
+      "description": "Micro-foam, house blend espresso, cocoa dust",
+      "price": 240,
+      "category": "coffee",
+      "image": "https://images.unsplash.com/photo-1534778101976-62847782c213?q=80&w=1887&auto=format&fit=crop",
+      "tags": ["veg"],
+      "badge": null,
+      "available": true
+    },
+    {
+      "id": "005",
+      "name": "Cold Brew Tonic",
+      "description": "18-hour steep, premium tonic, rosemary sprig",
+      "price": 260,
+      "category": "coffee",
+      "image": "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?q=80&w=1887&auto=format&fit=crop",
+      "tags": ["veg"],
+      "badge": "Refreshing",
+      "available": true
+    },
+    {
+      "id": "006",
+      "name": "Avocado Mash Toast",
+      "description": "Hass avocado, chili flakes, sea salt, sourdough",
+      "price": 350,
+      "category": "food",
+      "image": "https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=1780&auto=format&fit=crop",
+      "tags": ["veg", "healthy"],
+      "badge": null,
+      "available": true
+    },
+    {
+      "id": "007",
+      "name": "Smoked Salmon Bagel",
+      "description": "Cream cheese, capers, red onion, dill",
+      "price": 420,
+      "category": "food",
+      "image": "https://images.unsplash.com/photo-1584947844610-82926715f571?q=80&w=2070&auto=format&fit=crop",
+      "tags": ["non-veg"],
+      "badge": null,
+      "available": true
+    },
+    {
+      "id": "008",
+      "name": "Dark Chocolate Tart",
+      "description": "70% cocoa, sea salt, hazelnut crust",
+      "price": 320,
+      "category": "desserts",
+      "image": "https://images.unsplash.com/photo-1551024506-0bccd828d307?q=80&w=1964&auto=format&fit=crop",
+      "tags": ["veg"],
+      "badge": "Chef's Choice",
+      "available": true
+    }
+  ]
+}
