@@ -1,15 +1,51 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { MenuItem } from "@/types/menu";
 import { CAFE_CONFIG } from "@/config/cafe.config";
 import Image from "next/image";
 
 export default function ComboCard({ item }: { item: MenuItem }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let ctx: any;
+
+    const initGSAP = async () => {
+      const { gsap } = await import("gsap");
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+      gsap.registerPlugin(ScrollTrigger);
+
+      ctx = gsap.context(() => {
+        if (cardRef.current) {
+          gsap.fromTo(cardRef.current,
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "expo.out",
+              scrollTrigger: {
+                trigger: cardRef.current,
+                start: "top 95%",
+                toggleActions: "play none none none"
+              }
+            }
+          );
+        }
+      }, cardRef);
+    };
+
+    initGSAP();
+    return () => ctx?.revert();
+  }, []);
+
   return (
     <motion.div
+      ref={cardRef}
       whileHover={{ scale: 1.02 }}
-      className="group relative bg-bgSecondary border border-accent/20 rounded-3xl overflow-hidden transition-all duration-500 hover:border-accent/50"
+      className="group relative bg-bgSecondary border border-accent/20 rounded-3xl overflow-hidden transition-all duration-500 hover:border-accent/50 col-span-1 md:col-span-2"
     >
       <div className="relative aspect-video overflow-hidden">
         <Image

@@ -1,44 +1,45 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { MenuItem } from "@/types/menu";
+import { forwardRef } from "react";
+import { MenuItem, Category } from "@/types/menu";
 import MenuCard from "./MenuCard";
 import ComboCard from "./ComboCard";
+import SpecialCard from "./SpecialCard";
+import CategorySection from "./CategorySection";
 
 interface MenuGridProps {
+  categories: Category[];
   items: MenuItem[];
 }
 
-export default function MenuGrid({ items }: MenuGridProps) {
-  // Simple CSS Column Masonry
-  return (
-    <motion.div
-      layout
-      className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 mt-12"
-    >
-      <AnimatePresence mode="popLayout">
-        {items.map((item, index) => (
-          <motion.div
-            key={item.id}
-            layout
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
-            transition={{
-              duration: 0.4,
-              delay: index * 0.05,
-              ease: [0.23, 1, 0.32, 1]
+const MenuGrid = forwardRef<Record<string, HTMLDivElement | null>, MenuGridProps>(
+  ({ categories, items }, ref) => {
+    return (
+      <div className="space-y-12 mt-12">
+        {categories.map((category) => (
+          <CategorySection
+            key={category.id}
+            category={category}
+            ref={(el) => {
+              if (ref && "current" in ref && ref.current) {
+                ref.current[category.id] = el;
+              }
             }}
-            className="break-inside-avoid mb-6"
           >
-            {item.category === "combos" ? (
-              <ComboCard item={item} />
-            ) : (
-              <MenuCard item={item} />
-            )}
-          </motion.div>
+            {items
+              .filter((item) => item.category === category.id)
+              .map((item) => {
+                if (category.type === "special") return <SpecialCard key={item.id} item={item} />;
+                if (category.type === "combo") return <ComboCard key={item.id} item={item} />;
+                return <MenuCard key={item.id} item={item} />;
+              })}
+          </CategorySection>
         ))}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
+      </div>
+    );
+  }
+);
+
+MenuGrid.displayName = "MenuGrid";
+
+export default MenuGrid;

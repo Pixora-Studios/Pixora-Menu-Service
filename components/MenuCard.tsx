@@ -1,13 +1,49 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { MenuItem } from "@/types/menu";
 import { CAFE_CONFIG } from "@/config/cafe.config";
 import Image from "next/image";
 
 export default function MenuCard({ item }: { item: MenuItem }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let ctx: any;
+
+    const initGSAP = async () => {
+      const { gsap } = await import("gsap");
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+      gsap.registerPlugin(ScrollTrigger);
+
+      ctx = gsap.context(() => {
+        if (cardRef.current) {
+          gsap.fromTo(cardRef.current,
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "expo.out",
+              scrollTrigger: {
+                trigger: cardRef.current,
+                start: "top 95%",
+                toggleActions: "play none none none"
+              }
+            }
+          );
+        }
+      }, cardRef);
+    };
+
+    initGSAP();
+    return () => ctx?.revert();
+  }, []);
+
   return (
     <motion.div
+      ref={cardRef}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className="group relative bg-cardBg border border-border rounded-2xl overflow-hidden transition-all duration-500 hover:border-accent/30 hover:shadow-2xl hover:shadow-accent/5"

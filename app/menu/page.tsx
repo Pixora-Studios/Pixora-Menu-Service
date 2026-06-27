@@ -1,13 +1,13 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Suspense, useState, useMemo, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import menuDataRaw from "@/data/menu.json";
 import CategoryTabs from "@/components/CategoryTabs";
 import MenuGrid from "@/components/MenuGrid";
-import SpecialCard from "@/components/SpecialCard";
 import TableBanner from "@/components/TableBanner";
+import FloatingCategoryButton from "@/components/FloatingCategoryButton";
 import { CAFE_CONFIG } from "@/config/cafe.config";
 import { MenuData, Category } from "@/types/menu";
 
@@ -17,17 +17,48 @@ function MenuContent() {
   const searchParams = useSearchParams();
   const tableNumber = searchParams.get("table");
   const [activeCategory, setActiveCategory] = useState(menuData.categories[0].id);
+  const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const filteredItems = useMemo(() => {
-    return menuData.items.filter((item) => item.category === activeCategory);
-  }, [activeCategory]);
+  const scrollToCategory = (categoryId: string) => {
+    const el = categoryRefs.current[categoryId];
+    if (el) {
+      const offset = 100; // Offset for sticky header
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = el.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
 
-  const activeCategoryType = useMemo(() => {
-    return menuData.categories.find(c => c.id === activeCategory)?.type;
-  }, [activeCategory]);
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveCategory(entry.target.getAttribute("data-category") ?? "");
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: "-100px 0px -40% 0px"
+      }
+    );
+
+    Object.values(categoryRefs.current).forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="min-h-screen pb-20 pt-10 px-4 md:px-8 max-w-7xl mx-auto">
+    <div className="min-h-screen pb-32 pt-10 px-4 md:px-8 max-w-7xl mx-auto">
       <div className="flex flex-col items-center mb-12">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
@@ -51,35 +82,19 @@ function MenuContent() {
       <CategoryTabs
         categories={menuData.categories as Category[]}
         active={activeCategory}
-        onChange={setActiveCategory}
+        onChange={scrollToCategory}
       />
 
-      <div className="mt-12">
-        <AnimatePresence mode="wait">
-          {activeCategoryType === "special" ? (
-            <motion.div
-              key="specials-grid"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-8"
-            >
-              {filteredItems.map((item) => (
-                <SpecialCard key={item.id} item={item} />
-              ))}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="regular-grid"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-            >
-              <MenuGrid items={filteredItems} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      <MenuGrid
+        categories={menuData.categories as Category[]}
+        items={menuData.items}
+        ref={categoryRefs}
+      />
+
+      <FloatingCategoryButton
+        categories={menuData.categories as Category[]}
+        onSelect={scrollToCategory}
+      />
 
       <footer className="mt-24 text-center border-t border-border pt-12">
         <div className="text-accent font-heading text-2xl mb-4">{CAFE_CONFIG.name}</div>
