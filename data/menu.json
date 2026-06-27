@@ -1,0 +1,77 @@
+{
+  "categories": [
+    { "id": "specials", "label": "Chef's Specials", "icon": "✦", "type": "special" },
+    { "id": "combos",   "label": "Combos",          "icon": "◈", "type": "combo"   },
+    { "id": "coffee",   "label": "Coffee",           "icon": "◉", "type": "regular" },
+    { "id": "food",     "label": "Bites",            "icon": "◍", "type": "regular" },
+    { "id": "desserts", "label": "Desserts",         "icon": "◎", "type": "regular" }
+  ],
+  "items": [
+    {
+      "id": "001",
+      "name": "Black Velvet Espresso",
+      "description": "Double shot, cold brew reduction, smoked vanilla",
+      "price": 280,
+      "category": "coffee",
+      "image": "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?q=80&w=2070&auto=format&fit=crop",
+      "tags": ["bestseller", "veg"],
+      "badge": null,
+      "available": true
+    },
+    {
+      "id": "004",
+      "name": "Iced Gold Latte",
+      "description": "24k edible gold flakes, oat milk, honey",
+      "price": 320,
+      "category": "coffee",
+      "image": "https://images.unsplash.com/photo-1461023233267-0784ffb75e91?q=80&w=2070&auto=format&fit=crop",
+      "tags": ["new", "veg"],
+      "badge": "Trending",
+      "available": true
+    },
+    {
+      "id": "002",
+      "name": "The Noir Combo",
+      "description": "Any cold brew + Croissant + House cookie",
+      "price": 449,
+      "originalPrice": 560,
+      "category": "combos",
+      "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2070&auto=format&fit=crop",
+      "tags": ["value", "veg"],
+      "badge": "Save ₹111",
+      "available": true,
+      "comboIncludes": ["Any Cold Brew", "Butter Croissant", "Dark Chocolate Cookie"]
+    },
+    {
+      "id": "003",
+      "name": "Midnight Truffle Toast",
+      "description": "Chef's weekly special. Black truffle, ricotta, sourdough",
+      "price": 390,
+      "category": "specials",
+      "image": "https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=2080&auto=format&fit=crop",
+      "tags": ["limited", "veg", "mustTry"],
+      "badge": "Today Only",
+      "available": true
+    },
+    {
+      "id": "005",
+      "name": "Spicy Arrabbiata",
+      "description": "Penne, chili-infused pomodoro, basil flakes",
+      "price": 420,
+      "category": "food",
+      "image": "https://images.unsplash.com/photo-1563379091339-03b17af4a4f9?q=80&w=2070&auto=format&fit=crop",
+      "tags": ["spicy", "veg"],
+      "available": true
+    },
+    {
+      "id": "006",
+      "name": "Dark Chocolate Dome",
+      "description": "70% cocoa, molten center, gold dust",
+      "price": 350,
+      "category": "desserts",
+      "image": "https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?q=80&w=2070&auto=format&fit=crop",
+      "tags": ["bestseller", "veg"],
+      "available": true
+    }
+  ]
+}
