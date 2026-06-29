@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #F7F3EE;
+  --primary: #C96A3B;
+  --secondary: #7A9E7E;
+  --text-primary: #1C1A17;
+  --text-muted: #7A6F65;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  min-height: 100dvh;
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.clay-card {
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(180, 120, 80, 0.10);
+}
