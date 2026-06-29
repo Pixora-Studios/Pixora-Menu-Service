@@ -31,6 +31,8 @@ export default function HomeHero() {
   };
 
   const handleMenuClick = () => {
+    // Shared-element style transition logic
+    // We navigate to /menu, the PageTransition component will handle the exit/enter
     router.push("/menu");
   };
 
@@ -39,7 +41,7 @@ export default function HomeHero() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="relative flex flex-col items-center justify-center min-h-[100dvh] px-8 text-center overflow-hidden"
+      className="relative flex flex-col items-center justify-center min-h-[100dvh] px-8 text-center overflow-hidden bg-background"
     >
       {/* Background Blobs */}
       {!shouldReduceMotion && (
@@ -66,6 +68,7 @@ export default function HomeHero() {
           alt={cafeConfig.name}
           fill
           className="object-contain drop-shadow-clay"
+          sizes="96px"
         />
       </motion.div>
 
@@ -101,7 +104,7 @@ export default function HomeHero() {
         whileTap={{ scale: 0.95 }}
         onClick={handleMenuClick}
         layoutId="menu-button"
-        className="w-full py-4 bg-primary text-white rounded-full font-medium shadow-clay"
+        className="w-full py-4 bg-primary text-white rounded-full font-medium shadow-clay relative z-10"
       >
         View Menu
       </motion.button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
@@ -13,32 +13,29 @@ export default function LoadingScreen() {
   const nameRef = useRef<HTMLHeadingElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     const tl = gsap.timeline({
       onComplete: () => {
-        gsap.to(containerRef.current, {
-          scale: shouldReduceMotion ? 1 : 1.1,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power2.inOut",
-          onComplete: () => {
-            router.push("/home");
-          },
-        });
+        router.push("/home");
       },
     });
 
     if (!shouldReduceMotion) {
-      // Background gradient animation
       tl.to(containerRef.current, {
         background: "radial-gradient(circle, #F7F3EE 0%, #EDE5DA 100%)",
         duration: 1.1,
         yoyo: true,
-        repeat: 1, // Repeat once for 2.2s total
+        repeat: 1,
       }, 0);
 
-      // Logo clay bounce
       tl.fromTo(
         logoRef.current,
         { scale: 0.7, opacity: 0 },
@@ -51,7 +48,6 @@ export default function LoadingScreen() {
         0.2
       );
 
-      // Name fade in and drift
       tl.fromTo(
         nameRef.current,
         { y: 20, opacity: 0 },
@@ -59,19 +55,20 @@ export default function LoadingScreen() {
         0.8
       );
 
-      // Ensure the timeline takes at least 2.2s
       tl.add(() => {}, 2.2);
     } else {
       tl.to(logoRef.current, { opacity: 1, duration: 0.5 }, 0.2);
       tl.to(nameRef.current, { opacity: 1, duration: 0.5 }, 0.5);
-      tl.to({}, { duration: 1.5 }); // Wait
+      tl.to({}, { duration: 1.5 });
       tl.add(() => {}, 2.2);
     }
 
     return () => {
       tl.kill();
     };
-  }, [router, shouldReduceMotion]);
+  }, [isMounted, router, shouldReduceMotion]);
+
+  if (!isMounted) return <div className="fixed inset-0 bg-[#F7F3EE]" />;
 
   return (
     <div
@@ -85,6 +82,7 @@ export default function LoadingScreen() {
           fill
           className="object-contain drop-shadow-clay"
           priority
+          sizes="128px"
         />
       </div>
       <h1
