@@ -33,9 +33,9 @@ export default function LoadingScreen() {
       // Background gradient animation
       tl.to(containerRef.current, {
         background: "radial-gradient(circle, #F7F3EE 0%, #EDE5DA 100%)",
-        duration: 2.2,
-        repeat: -1,
+        duration: 1.1,
         yoyo: true,
+        repeat: 1, // Repeat once for 2.2s total
       }, 0);
 
       // Logo clay bounce
@@ -58,10 +58,14 @@ export default function LoadingScreen() {
         { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
         0.8
       );
+
+      // Ensure the timeline takes at least 2.2s
+      tl.add(() => {}, 2.2);
     } else {
       tl.to(logoRef.current, { opacity: 1, duration: 0.5 }, 0.2);
       tl.to(nameRef.current, { opacity: 1, duration: 0.5 }, 0.5);
       tl.to({}, { duration: 1.5 }); // Wait
+      tl.add(() => {}, 2.2);
     }
 
     return () => {
