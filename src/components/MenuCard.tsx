@@ -27,12 +27,13 @@ export default function MenuCard({ item, index }: MenuCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.05 }}
-      className={`glass-morphism clay-card p-3 mb-4 flex items-center gap-4 min-h-[100px] ${
+      // Fixed height of 100px as requested
+      className={`glass-morphism clay-card p-2.5 mb-3 flex items-center gap-3 h-[100px] overflow-hidden ${
         isEven ? "flex-row" : "flex-row-reverse"
       }`}
     >
-      {/* Image */}
-      <div className="relative w-20 h-20 flex-shrink-0">
+      {/* Image - reduced size to fit height comfortably */}
+      <div className="relative w-16 h-16 flex-shrink-0">
         <Image
           src={item.imageUrl}
           alt={item.name}
@@ -42,26 +43,26 @@ export default function MenuCard({ item, index }: MenuCardProps) {
       </div>
 
       {/* Content */}
-      <div className={`flex-1 flex flex-col ${isEven ? "text-left" : "text-right"}`}>
-        <div className={`flex items-baseline gap-2 mb-1 ${isEven ? "flex-row" : "flex-row-reverse"}`}>
-          <h3 className="text-[15px] font-semibold text-text-primary line-clamp-1">
+      <div className={`flex-1 flex flex-col justify-center overflow-hidden ${isEven ? "text-left" : "text-right"}`}>
+        <div className={`flex items-baseline gap-2 mb-0.5 ${isEven ? "flex-row" : "flex-row-reverse"}`}>
+          <h3 className="text-[14px] font-semibold text-text-primary truncate">
             {item.name}
           </h3>
-          <span className="text-sm font-semibold text-primary">
+          <span className="text-[13px] font-semibold text-primary whitespace-nowrap">
             ₹{item.price}
           </span>
         </div>
 
-        <p className="text-[12px] text-text-muted line-clamp-2 leading-tight mb-2">
+        <p className="text-[11px] text-text-muted line-clamp-2 leading-tight mb-1.5">
           {item.description}
         </p>
 
-        {/* Tags */}
+        {/* Tags - kept very compact */}
         <div className={`flex flex-wrap gap-1 ${isEven ? "justify-start" : "justify-end"}`}>
-          {item.tags.map((tag) => (
+          {item.tags.slice(0, 2).map((tag) => (
             <span
               key={tag}
-              className={`text-[9px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
+              className={`text-[8px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded-full ${
                 tagColors[tag] || "bg-gray-100 text-gray-500"
               }`}
             >
